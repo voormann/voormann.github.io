@@ -1,10 +1,7 @@
-const canvas = document.querySelector('canvas');
-const ctx = canvas.getContext('2d');
-
 const explosion = {
-    multiplier: 8,
+    colors: ['#6434E9', '#2C7CE5', '#49CC5C', '#F8C421', '#FB6640', '#F82553'],
     variations: 6,
-    colors: ['#6434E9', '#2C7CE5', '#49CC5C', '#F8C421', '#FB6640', '#F82553']
+    multiplier: 8
 };
 
 const explosions = {
@@ -34,7 +31,7 @@ const particles = {
         const { variations, colors } = explosion;
 
         for (let i = 0; i < variations; ++i) {
-            this.array.push({ style: colors[i], indices: [] }); // initialize style bucket indices
+            this.array.push({ style: colors[i], indices: [] }); // initialize color indices
         }
     },
     create(style) {
@@ -78,7 +75,6 @@ class Explosion {
     constructor() {
         this.particles = [];
         this.size = 0;
-        this.collided = true;
     }
 
     init(x, y) {
@@ -92,7 +88,6 @@ class Explosion {
         }
 
         this.size = idx;
-        this.collided = false;
     }
 
     update() { // utilize bubble sort to keep live particles grouped at the start of the array
@@ -111,11 +106,7 @@ class Explosion {
                 p.dead = true; // mark particle as ready to be pooled
                 head += 1;
             } else {
-                if (this.collided) {
-                    p.collide();
-                } else {
-                    this.collided = p.collide();
-                }
+                p.collide();
 
                 if (tail < head) { // bubble dead particles up
                     const temp = particles[head];
@@ -159,37 +150,8 @@ class Particle {
     collide() {
         if (this.x > canvas.width || this.x < 0) {
             this.vx = -this.vx;
-
-            return true;
         } else if (this.y > canvas.height || this.y < 0) {
             this.vy = -this.vy;
-
-            return true;
         }
-
-        return false;
     }
 }
-
-function loop() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    explosions.update();
-    particles.draw();
-    requestAnimationFrame(loop);
-}
-
-window.addEventListener('resize', resize, false);
-
-canvas.addEventListener('mousedown', (e) => {
-    const explosion = explosions.create();
-    explosion.init(e.offsetX, e.offsetY);
-}, false);
-
-function resize() {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-}
-
-particles.init();
-resize();
-loop();
