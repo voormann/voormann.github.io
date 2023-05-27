@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WordFlay</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main>
+    <textarea autofocus placeholder="Start by typing, or paste something..."></textarea>
+    <resize-bar>
+        <svg width="25" height="20" viewBox="0 0 34 38" fill="white">
+            <path d="m30 21-26 0 13 13 13-13zm0-4-26 0L17 4l13 13z"/>
+        </svg>
+    </resize-bar>
+</main>
+<section>
+<div>
+    <strong title="Lexical repetitiveness">Repetition</strong>
+    <span id="ratio">0%</span>
+</div>
+<div>
+    <strong title="Lexical complexity deviating from a midpoint of 0.5, where a lower value indicates simplicity">Intricacy</strong>
+    <span id="complexity">0</span>
+</div>
+<div>
+    <strong title="Estimated reading time">Temporality</strong>
+    <span id="temporality">0 min</span>
+</div>
+<div>
+    <strong title="Sentence & paragraph count">Phrases</strong>
+    <span id="phrases">0</span>
+</div>
+<div>
+    <strong title="Word count">Words</strong>
+    <span id="words">0</span>
+</div>
+<div>
+    <strong title="Letter count">Letters</strong>
+    <span id="letters">0</span>
+</div>
+</section>
+<table>
+<thead>
+<tr>
+    <th title="Glossary">Index</th>
+    <th title="Number of occurrences">Frequency</th>
+    <th title="Word letter count">Length</th>
+    <th title="Total letter count across all occurrences">Tally</th>
+    <th title="Proportion of the tally in relation to the text">Weight</th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+<script src="main.js"></script>
+</body>
+</html>
