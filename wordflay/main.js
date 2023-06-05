@@ -3,6 +3,8 @@ const distribution = document.querySelector('tbody');
 let ascending = true;
 let displacing = false;
 let endpoint = 0;
+let invocation = 0;
+let scheduled = null;
 
 function analyze() {
     const input = excerpt.value;
@@ -44,6 +46,21 @@ function analyze() {
     distribution.innerHTML = rows;
 }
 
+function kflay() {
+    const now = Date.now();
+    const elapsed = now - invocation;
+
+    invocation = now;
+
+    if (elapsed > 1000) {
+        analyze();
+    } else {
+        clearTimeout(scheduled);
+
+        scheduled = setTimeout(analyze, 1000 - elapsed);
+    }
+}
+
 window.addEventListener('load', () => {
     document.querySelector('thead').addEventListener('click', (event) => {
         if (event.target.tagName !== 'TH')
@@ -72,7 +89,7 @@ window.addEventListener('load', () => {
         distribution.append(...rows);
     });
 
-    excerpt.addEventListener('input', analyze);
+    excerpt.addEventListener('input', kflay);
 
     document.querySelector('resize-bar').addEventListener('mousedown', (e) => {
         displacing = true;
