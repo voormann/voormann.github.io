@@ -1,4 +1,4 @@
-html, body {
+body {
     font-family: sans-serif;
     background-color: #d3e8ff;
     margin: 0;
@@ -14,13 +14,13 @@ table {
 }
 
 th, td {
-    text-align: left;
     padding: 8px;
 }
 
 th {
     background-color: #4a90e2;
     color: white;
+    text-align: left;
     text-transform: uppercase;
     cursor: pointer;
     transition: background-color 0.3s;
