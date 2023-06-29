@@ -52,12 +52,12 @@ function kflay() {
 
     invocation = now;
 
-    if (elapsed > 1000) {
+    if (elapsed > 500) {
         analyze();
     } else {
         clearTimeout(scheduled);
 
-        scheduled = setTimeout(analyze, 1000 - elapsed);
+        scheduled = setTimeout(analyze, 500 - elapsed);
     }
 }
 
