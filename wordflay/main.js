@@ -57,7 +57,7 @@ function kflay() {
     } else {
         clearTimeout(scheduled);
 
-        scheduled = setTimeout(analyze, 500 - elapsed);
+        scheduled = setTimeout(analyze, 500);
     }
 }
 
