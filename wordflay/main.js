@@ -10,28 +10,21 @@ function analyze() {
     const input = excerpt.value;
     const words = input.toLowerCase().match(/[\p{L}\p{N}]+(?:\S[\p{L}\p{N}]+)*/gu) || [];
     const glossary = new Map();
-    let repeatCount = 0;
 
-    for (const word of words) {
-        const freq = (glossary.get(word) || 0) + 1;
+    for (const word of words)
+        glossary.set(word, (glossary.get(word) || 0) + 1);
 
-        glossary.set(word, freq);
-
-        if (freq > 1)
-            repeatCount++;
-    }
-
-    const repeatPercentage = Math.round((repeatCount / words.length) * 10000) / 100 || 0;
+    const repeatPercentage = Math.round((1 - (glossary.size / words.length)) * 10000) / 100 || 0;
     const sentences = (input.match(/[.?!]\s+|\n+/g) || []).length;
     const rating = Math.round(((words.length / Math.max(sentences, 1) - 17) / 34 + 0.5) * 100) / 100;
-    const readingTime = Math.ceil((words.length / 238) + (sentences / 120));
+    const readingTime = Math.ceil(words.length / 200);
 
-    document.getElementById('ratio').textContent = repeatPercentage + "%";
+    document.getElementById('ratio').textContent = `${repeatPercentage}%`;
     document.getElementById('complexity').textContent = rating;
-    document.getElementById('temporality').textContent = readingTime + " min";
-    document.getElementById('phrases').textContent = sentences;
-    document.getElementById('words').textContent = words.length;
-    document.getElementById('letters').textContent = input.length;
+    document.getElementById('temporality').textContent = formatTime(readingTime);
+    document.getElementById('phrases').textContent = formatNumber(sentences);
+    document.getElementById('words').textContent = formatNumber(words.length);
+    document.getElementById('letters').textContent = formatNumber(input.length);
 
     const sortedWords = [...glossary.entries()].sort((a, b) => b[1] - a[1]);
     let rows = "";
@@ -40,10 +33,41 @@ function analyze() {
         const relevance = word.length * freq;
         const percentage = Math.round((relevance / input.length) * 10000) / 100;
 
-        rows += `<tr><td>${word}</td><td>${freq}</td><td>${word.length}</td><td>${relevance}</td><td>${percentage}%</td></tr>`;
+        rows += `<tr><td>${word}</td><td>${freq}</td><td>${word.length}</td><td>${relevance} (${percentage}%)</td></tr>`;
     }
 
     distribution.innerHTML = rows;
+}
+
+function formatNumber(numbah) {
+    const str = numbah.toString();
+    let result = "";
+    let count = 0;
+
+    for (let i = str.length - 1; i >= 0; i--) {
+        result = str[i] + result;
+        count++;
+
+        if (count % 3 === 0 && i !== 0)
+            result = " " + result;
+    }
+
+    return result;
+}
+
+function formatTime(minutes) {
+    const hours = Math.floor(minutes / 60);
+    const remainingMinutes = minutes % 60;
+
+    if (hours > 0) {
+        if (remainingMinutes === 0) {
+            return `${hours} hr`;
+        } else {
+            return `${hours} hr ${remainingMinutes} min`;
+        }
+    } else {
+        return `${remainingMinutes} min`;
+    }
 }
 
 function kflay() {
@@ -78,8 +102,8 @@ window.addEventListener('load', () => {
             });
         } else {
             rows.sort((tr1, tr2) => {
-                const tr1Data = parseFloat(tr1.cells[cellIndex].textContent);
-                const tr2Data = parseFloat(tr2.cells[cellIndex].textContent);
+                const tr1Data = parseInt(tr1.cells[cellIndex].textContent);
+                const tr2Data = parseInt(tr2.cells[cellIndex].textContent);
 
                 return ascending ? tr1Data - tr2Data : tr2Data - tr1Data;
             });

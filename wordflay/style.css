@@ -36,7 +36,7 @@ th:active {
 
 th:not(:first-child) {
     border-left: 2px solid #e7f3fe;
-    width: 15%;
+    width: 20%;
 }
 
 td:first-child {
