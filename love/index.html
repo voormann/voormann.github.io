@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Love Calculator</title>
+<style>
+body {
+    font-family: sans-serif;
+    text-align: center;
+    margin: 0;
+    background-color: hsl(240, 80%, 90%);
+    transition: background-color 1s ease;
+}
+
+main {
+    display: inline-block;
+    margin-top: 25vh;
+}
+
+section {
+    display: flex;
+    align-items: center;
+}
+
+input, select {
+    box-sizing: border-box;
+    width: 260px;
+    font-size: 16px;
+}
+
+select:invalid {
+    color: gray;
+}
+
+div {
+    font-size: 20px;
+}
+
+input, select, div {
+    padding: 10px;
+    margin: 5px 0 5px;
+    border: none;
+    border-radius: 5px;
+    background-color: rgba(255, 255, 255, 0.5);
+    box-shadow: inset 4px 4px 10px rgba(255, 255, 255, 0.40), 4px 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+span {
+    font-size: 24px;
+    margin: 0 10px;
+}
+</style>
+</head>
+<body>
+<main>
+<section>
+    <input type="text" id="name1" autofocus autocomplete="off" spellcheck="false" placeholder="Name">
+    <span>❤️</span>
+    <input type="text" id="name2" autocomplete="off" spellcheck="false" placeholder="Name">
+</section>
+<section>
+    <select id="sign1" required>
+        <option value="" disabled selected hidden>Zodiac</option>
+        <option value="2">Aries (Mar 21 – Apr 19)</option>
+        <option value="0">Taurus (Apr 20 – May 20)</option>
+        <option value="3">Gemini (May 21 – Jun 20)</option>
+        <option value="1">Cancer (Jun 21 – Jul 22)</option>
+        <option value="2">Leo (Jul 23 – Aug 22)</option>
+        <option value="0">Virgo (Aug 23 – Sep 22)</option>
+        <option value="3">Libra (Sep 23 – Oct 22)</option>
+        <option value="1">Scorpio (Oct 23 – Nov 21)</option>
+        <option value="2">Sagittarius (Nov 22 – Dec 21)</option>
+        <option value="0">Capricorn (Dec 22 – Jan 19)</option>
+        <option value="3">Aquarius (Jan 20 – Feb 18)</option>
+        <option value="1">Pisces (Feb 19 – Mar 20)</option>
+    </select>
+    <span>🌟</span>
+    <select id="sign2" required>
+        <option value="" disabled selected hidden>Zodiac</option>
+        <option value="2">Aries (Mar 21 – Apr 19)</option>
+        <option value="0">Taurus (Apr 20 – May 20)</option>
+        <option value="3">Gemini (May 21 – Jun 20)</option>
+        <option value="1">Cancer (Jun 21 – Jul 22)</option>
+        <option value="2">Leo (Jul 23 – Aug 22)</option>
+        <option value="0">Virgo (Aug 23 – Sep 22)</option>
+        <option value="3">Libra (Sep 23 – Oct 22)</option>
+        <option value="1">Scorpio (Oct 23 – Nov 21)</option>
+        <option value="2">Sagittarius (Nov 22 – Dec 21)</option>
+        <option value="0">Capricorn (Dec 22 – Jan 19)</option>
+        <option value="3">Aquarius (Jan 20 – Feb 18)</option>
+        <option value="1">Pisces (Feb 19 – Mar 20)</option>
+    </select>
+</section>
+<div id="result"><b>0%</b><br><i>Enter both names; zodiacs are optional</i></div>
+</main>
+<script>
+const name1Input = document.getElementById('name1');
+const name2Input = document.getElementById('name2');
+const sign1Input = document.getElementById('sign1');
+const sign2Input = document.getElementById('sign2');
+const resultText = document.getElementById('result');
+
+name1Input.addEventListener('input', calculateLove);
+name2Input.addEventListener('input', calculateLove);
+sign1Input.addEventListener('change', calculateLove);
+sign2Input.addEventListener('change', calculateLove);
+
+function calculateLove() {
+    const name1 = name1Input.value.toLowerCase();
+    const name2 = name2Input.value.toLowerCase();
+    const sign1 = sign1Input.value;
+    const sign2 = sign2Input.value;
+
+    if (name1 === "" || name2 === "") {
+        resultText.innerHTML = `<b>0%</b><br><i>Enter both names; zodiacs are optional<i>`;
+        document.body.style.backgroundColor = "hsl(240, 80%, 90%)";
+        return;
+    }
+
+    const minLength = Math.min(name1.length, name2.length);
+    let distance = 0;
+    
+    for (let i = 0; i < minLength; i++) {
+        const clamped1 = Math.max(96, Math.min(123, name1.charCodeAt(i)));
+        const clamped2 = Math.max(96, Math.min(123, name2.charCodeAt(i)));
+
+        distance += Math.abs(clamped1 - clamped2);
+    }
+
+    let multiplier = 1;
+
+    if (sign1 !== "" && sign2 !== "") {
+        const compatibilityTable = [
+            [0.2, 0.1, 0.05, 0.05],
+            [0.1, 0.2, 0.05, 0.05],
+            [0.05, 0.05, 0.2, 0.1],
+            [0.05, 0.05, 0.1, 0.2]
+        ];
+
+        multiplier -= compatibilityTable[parseInt(sign1)][parseInt(sign2)];
+    }
+
+    if (Math.abs(name1.length - name2.length) <= 1)
+        multiplier -= 0.2;
+
+    const normalizedDistance = (distance * multiplier) / (28 * minLength);
+    const percentage = Math.max(100 - normalizedDistance * 100, 0);
+
+    resultText.innerHTML = `<b>${Math.round(percentage * 100) / 100}%</b><br><i>${mind(name1 + sign1 + name2 + sign2)}<i>`;
+    document.body.style.backgroundColor = `hsl(${Math.floor(240 - (percentage * 2.4))}, 100%, 90%)`;
+}
+
+function mind(str) {
+    const arr = ["happy", "fearful", "excited", "calm", "anxious", "confident", "curious", "bored", "surprised", "hopeful", "grateful", "jealous", "nervous", "content", "lonely", "frustrated", "relieved", "insecure", "proud", "apathetic", "guilty", "overwhelmed", "enthusiastic", "amused", "indifferent", "sympathetic", "confused", "eager", "regretful", "empathetic", "hostile", "joyful", "pensive", "humbled", "blissful", "melancholic", "suspicious", "shy", "envious", "playful", "satisfied", "ecstatic", "inspired", "reflective", "blessed", "stressed", "vulnerable", "wistful", "cautious", "hesitant", "impatient", "perplexed", "reserved", "worried", "contradictory", "dismissive", "apprehensive", "bittersweet", "euphoria", "serenity", "whimsical", "contentment", "nostalgic", "vivacious", "giddy", "enthralled", "elated", "mirthful", "radiant", "eclectic"];
+    let seed = [...str].reduce((acc, char) => acc + char.charCodeAt(0), 0);
+    let idx = arr.length;
+
+    while (idx) {
+        const stride = Math.floor(random(seed) * idx--);
+        const temp = arr[idx];
+
+        arr[idx] = arr[stride];
+        arr[stride] = temp;
+        ++seed;
+    }
+
+    return arr.slice(0, 3).join(" ");
+}
+
+function random(seed) {
+    const x = Math.sin(seed++) * 10000;
+    return x - Math.floor(x);
+}
+</script>
+</body>
+</html>
