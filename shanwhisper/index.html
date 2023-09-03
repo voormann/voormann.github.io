@@ -157,7 +157,7 @@ function mulberry32(seed) {
 function permute(str, key, obfuscate) {
     const chars = [...str];
     const indices = Array.from({ length: chars.length }, (_, index) => index);
-    const seed = [...key].reduce((seed, char) => seed + char.charCodeAt(0), 0);
+    const seed = fnv32(key);
     const rng = mulberry32(seed);
 
     for (let i = chars.length - 1; i > 0; i--) {
