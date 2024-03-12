@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Flaytris</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<canvas id="game" width="600" height="640"></canvas>
+<aside id="start" class="open">
+    <h1>Flaytris</h1>
+    <p>Layer sand of the same color across the canvas to score points. Use either <b>WASD</b> or <b>Arrow Keys</b> to steer.</p>
+    <ul>
+        <li><b>Left/Right</b> - Move</li>
+        <li><b>Up</b> - Rotate</li>
+        <li><b>Down</b> - Accelerate</li>
+        <li><b>Esc/P</b> - Play/Pause</li>
+    </ul>
+    <button name="start">Play</button>
+</aside>
+<aside id="pause">
+    <h1>Game Paused</h1>
+    <button name="pause">Resume</button>
+    <button name="start">Restart</button>
+</aside>
+<aside id="gameover">
+    <h1>Game Over</h1>
+    <p id="time"></p>
+    <b>RESULT</b>
+    <p id="result"></p>
+    <b>BEST</b>
+    <p id="best"></p>
+    <button name="start">Try Again</button>
+</aside>
+<div id="overlay" class="open"></div>
+<script src="main.js"></script>
+</body>
+</html>
