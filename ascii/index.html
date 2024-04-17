@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Non-ASCII Inspector</title>
+<style>
+body {
+    font-family: sans-serif;
+    margin: 0;
+}
+
+textarea {
+    font-family: sans-serif;
+    display: block;
+    box-sizing: border-box;
+    width: 100%;
+    height: 20vh;
+    resize: vertical;
+    border: 0;
+    border-bottom: 2px solid black;
+    margin-bottom: 5px;
+    padding: 5px;
+    outline: 0;
+}
+
+main, p {
+    margin: 5px;
+}
+
+button {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+#results {
+    margin-top: 20px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th, td {
+    padding: 8px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+th {
+    background-color: #f2f2f2;
+}
+</style>
+</head>
+<body>
+<textarea id="textInput" placeholder="Enter text..."></textarea>
+<main>
+<button onclick="analyzeText()">Analyze</button>
+<label><input type="checkbox" id="autoCheckbox" checked> Real-time</label>
+</main>
+<div id="results"></div>
+<script>
+function analyzeText() {
+    const text = document.getElementById('textInput').value;
+    const results = document.getElementById('results');
+    const nonASCIIChars = {};
+    let totalCount = 0;
+
+    for (const char of text) {
+        const charCode = char.charCodeAt(0);
+
+        if (charCode > 127) {
+            totalCount++;
+            nonASCIIChars[char] = nonASCIIChars[char] ? { ...nonASCIIChars[char], count: nonASCIIChars[char].count + 1 } : { count: 1, charCode };
+        }
+    }
+
+    if (totalCount === 0) {
+        results.innerHTML = `<p>No non-ASCII characters found.</p>`;
+    } else {
+        const sortedChars = Object.keys(nonASCIIChars).sort((a, b) => nonASCIIChars[b].count - nonASCIIChars[a].count);
+        let tableRows = '';
+
+        for (const char of sortedChars) {
+            const { count, charCode } = nonASCIIChars[char];
+            tableRows += `<tr><td>${char}</td><td>${count}</td><td><a href='https://unicodelookup.com/#${charCode}' target='_blank'>${charCode}</a></td></tr>`;
+        }
+        
+        results.innerHTML = `<p>Total non-ASCII characters: ${totalCount} (${sortedChars.length} unique)</p><table><tr><th>Character</th><th>Count</th><th>Unicode Number</th></tr>${tableRows}</table>`;
+    }
+}
+
+document.getElementById('textInput').addEventListener('input', () => {
+    if (document.getElementById('autoCheckbox').checked)
+        analyzeText();
+});
+</script>
+</body>
+</html>
