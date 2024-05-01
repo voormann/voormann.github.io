@@ -43,7 +43,8 @@ const inputText = document.querySelector('textarea');
 
 function encrypt() {
     const encodedBytes = new TextEncoder().encode(inputText.value);
-    const encryptedBytes = waltz(sha256(inputKey.value), encodedBytes);
+    const encodedKey = new TextEncoder().encode(sha256(inputKey.value));
+    const encryptedBytes = waltz(encodedKey, encodedBytes);
     const base64String = btoa(String.fromCharCode(...encryptedBytes));
 
     inputText.value = base64String;
@@ -51,7 +52,8 @@ function encrypt() {
 
 function decrypt() {
     const encryptedBytes = new Uint8Array([...atob(inputText.value)].map(char => char.charCodeAt(0)));
-    const decryptedBytes = waltz(sha256(inputKey.value), encryptedBytes);
+    const encodedKey = new TextEncoder().encode(sha256(inputKey.value));
+    const decryptedBytes = waltz(encodedKey, encryptedBytes);
     const plaintext = new TextDecoder().decode(new Uint8Array(decryptedBytes));
 
     inputText.value = plaintext;
@@ -59,13 +61,20 @@ function decrypt() {
 
 function waltz(key, indices) {
     const sBox = Array.from({ length: 256 }, (_, i) => i);
+
+    for (let i = 0; i < 256; i++) {
+        const rho = Math.floor(((i + 1) * (i + 2)) / 2) % 256;
+
+        [sBox[i], sBox[rho]] = [sBox[rho], sBox[i]];
+    }
+
     let count = 0;
 
     for (let i = 0; i < 768; i++) {
-        const index = i % 256;
+        const cycle = i % 256;
 
-        count = (count + sBox[index] + key.charCodeAt(index % key.length)) % 256;
-        [sBox[index], sBox[count]] = [sBox[count], sBox[index]];
+        count = (count + sBox[cycle] + key[cycle % key.length]) % 256;
+        [sBox[cycle], sBox[count]] = [sBox[count], sBox[cycle]];
     }
 
     const result = [];
