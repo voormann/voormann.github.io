@@ -60,8 +60,8 @@ span {
     <input type="text" id="name2" autocomplete="off" spellcheck="false" placeholder="Name">
 </section>
 <section>
-    <select id="sign1" required>
-        <option value="" disabled selected hidden>Zodiac</option>
+    <select id="sign1">
+        <option value="" selected hidden>Zodiac</option>
         <option value="2">Aries (Mar 21 – Apr 19)</option>
         <option value="0">Taurus (Apr 20 – May 20)</option>
         <option value="3">Gemini (May 21 – Jun 20)</option>
@@ -76,8 +76,8 @@ span {
         <option value="1">Pisces (Feb 19 – Mar 20)</option>
     </select>
     <span>🌟</span>
-    <select id="sign2" required>
-        <option value="" disabled selected hidden>Zodiac</option>
+    <select id="sign2">
+        <option value="" selected hidden>Zodiac</option>
         <option value="2">Aries (Mar 21 – Apr 19)</option>
         <option value="0">Taurus (Apr 20 – May 20)</option>
         <option value="3">Gemini (May 21 – Jun 20)</option>
@@ -113,7 +113,7 @@ function calculateLove() {
     const sign2 = sign2Input.value;
 
     if (name1 === "" || name2 === "") {
-        resultText.innerHTML = `<b>0%</b><br><i>Enter both names; zodiacs are optional<i>`;
+        resultText.innerHTML = `<b>0%</b><br><i>Enter both names; zodiacs are optional</i>`;
         document.body.style.backgroundColor = "hsl(240, 80%, 90%)";
         return;
     }
@@ -147,13 +147,13 @@ function calculateLove() {
     const normalizedDistance = (distance * multiplier) / (28 * minLength);
     const percentage = Math.max(100 - normalizedDistance * 100, 0);
 
-    resultText.innerHTML = `<b>${Math.round(percentage * 100) / 100}%</b><br><i>${mind(name1 + sign1 + name2 + sign2)}<i>`;
+    resultText.innerHTML = `<b>${Math.round(percentage * 100) / 100}%</b><br><i>${mind(name1 + sign1 + name2 + sign2)}</i>`;
     document.body.style.backgroundColor = `hsl(${Math.floor(240 - (percentage * 2.4))}, 100%, 90%)`;
 }
 
 function mind(str) {
     const arr = ["happy", "fearful", "excited", "calm", "anxious", "confident", "curious", "bored", "surprised", "hopeful", "grateful", "jealous", "nervous", "content", "lonely", "frustrated", "relieved", "insecure", "proud", "apathetic", "guilty", "overwhelmed", "enthusiastic", "amused", "indifferent", "sympathetic", "confused", "eager", "regretful", "empathetic", "hostile", "joyful", "pensive", "humbled", "blissful", "melancholic", "suspicious", "shy", "envious", "playful", "satisfied", "ecstatic", "inspired", "reflective", "blessed", "stressed", "vulnerable", "wistful", "cautious", "hesitant", "impatient", "perplexed", "reserved", "worried", "contradictory", "dismissive", "apprehensive", "bittersweet", "euphoria", "serenity", "whimsical", "contentment", "nostalgic", "vivacious", "giddy", "enthralled", "elated", "mirthful", "radiant", "eclectic"];
-    let seed = [...str].reduce((acc, char) => acc + char.charCodeAt(0), 0);
+    const seed = [...str].reduce((acc, char) => acc + char.charCodeAt(0), 0);
     let idx = arr.length;
 
     while (idx) {
@@ -170,6 +170,7 @@ function mind(str) {
 
 function random(seed) {
     const x = Math.sin(seed++) * 10000;
+
     return x - Math.floor(x);
 }
 </script>
